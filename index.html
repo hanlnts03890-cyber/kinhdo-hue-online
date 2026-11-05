@@ -11,8 +11,8 @@
         *{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif}
         body{background:linear-gradient(rgba(20,10,5,.92),rgba(50,25,10,.95));min-height:100vh;color:#fff}
         
-        /* Màn hình nhập tên — LUÔN HIỆN ĐẦU TIÊN */
-        .man-hinh-nhap{position:fixed;top:0;left:0;width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(rgba(40,10,10,.97),rgba(20,5,5,.95));z-index:999}
+        /* Màn hình nhập tên — luôn hiện đầu tiên */
+        .man-hinh-nhap{position:fixed;inset:0;width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(rgba(40,10,10,.97),rgba(20,5,5,.95));z-index:999}
         .man-hinh-nhap.an{display:none !important}
         .tieu-de{font-size:42px;color:#ffd700;margin-bottom:15px;text-shadow:0 0 20px rgba(255,215,0,.5)}
         .mo-ta{color:#f5deb3;font-size:18px;margin-bottom:40px}
@@ -43,7 +43,7 @@
 </head>
 <body>
 
-    <!-- LUÔN HIỆN ĐẦU TIÊN — KHÔNG BỎ QUA DƯỚI BẤT KỲ HOÀN CẢNH NÀO -->
+    <!-- Màn hình nhập tên — LUÔN HIỆN ĐẦU TIÊN -->
     <div class="man-hinh-nhap" id="manHinhNhap">
         <h1 class="tieu-de">🏛️ KINH ĐÔ HUẾ ONLINE</h1>
         <p class="mo-ta">Mở link là gặp nhau — không phòng, không mã!</p>
@@ -78,7 +78,7 @@
     <div class="thong-bao" id="tbNhan"></div>
 
 <script>
-// XÓA TẤT CẢ DỮ LIỆU LƯU — KHÔNG ĐỂ NHẢY QUA
+// XÓA SẠCH DỮ LIỆU CŨ MỖI LẦN TẢI TRANG
 localStorage.clear();
 sessionStorage.clear();
 
@@ -98,11 +98,11 @@ function capNhatDS(){
     ).join('');
 }
 
-// ĐẢM BẢO MÀN HÌNH NHẬP TÊN LUÔN HIỆN KHI TẢI XONG
-window.onload = function(){
+// BUỘC HIỆN MÀN HÌNH NHẬP TÊN KHI TRANG TẢI XONG
+document.addEventListener('DOMContentLoaded', function(){
     document.getElementById('manHinhNhap').classList.remove('an');
-    document.getElementById('tenCuaBan').value = ''; // XÓA TÊN CŨ TRƯỚC KHI HIỆN
-};
+    document.getElementById('tenCuaBan').value = '';
+});
 
 function vaoChoi(){
     const ten = document.getElementById('tenCuaBan').value.trim();
@@ -114,7 +114,6 @@ function vaoChoi(){
     tenNguoi = ten;
     dsOnline.push(tenNguoi);
     
-    // Ẩn màn hình nhập → hiện game
     document.getElementById('manHinhNhap').classList.add('an');
     setTimeout(()=>{
         document.getElementById('dauTrang').classList.add('hien');
