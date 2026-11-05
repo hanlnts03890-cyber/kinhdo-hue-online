@@ -9,120 +9,61 @@
     <title>Kinh Đô Huế Online</title>
     <style>
         *{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif}
-        body{background:linear-gradient(rgba(20,10,5,.92),rgba(50,25,10,.95));min-height:100vh;color:#fff}
-        
-        /* Màn hình nhập tên — luôn hiện đầu tiên */
-        .man-hinh-nhap{position:fixed;inset:0;width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(rgba(40,10,10,.97),rgba(20,5,5,.95));z-index:999}
+        body{background:#1a0f05;min-height:100vh;color:#fff}
+
+        /* ===== MÀN HÌNH NHẬP TÊN — LUÔN HIỆN ĐẦU TIÊN ===== */
+        .man-hinh-nhap{position:fixed;inset:0;width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(rgba(40,10,10,.97),rgba(20,5,5,.95));z-index:9999}
         .man-hinh-nhap.an{display:none !important}
+
         .tieu-de{font-size:42px;color:#ffd700;margin-bottom:15px;text-shadow:0 0 20px rgba(255,215,0,.5)}
         .mo-ta{color:#f5deb3;font-size:18px;margin-bottom:40px}
-        .nhap-ten{padding:15px 20px;font-size:20px;width:300px;text-align:center;border:2px solid #d4af37;border-radius:8px;background:rgba(0,0,0,.5);color:#fff;margin-bottom:25px}
+        .nhap-ten{padding:15px 20px;font-size:20px;width:300px;text-align:center;border:2px solid #d4af37;border-radius:8px;background:rgba(0,0,0,.5);color:#fff;margin-bottom:25px;outline:none}
         .btn-vao{padding:18px 60px;font-size:22px;font-weight:bold;border:none;border-radius:10px;background:linear-gradient(135deg,#b8860b,#ffd700);color:#2b0000;cursor:pointer;border:2px solid #ffd700;transition:transform .2s}
         .btn-vao:hover{transform:scale(1.05)}
-        
-        /* Header */
-        .dau-trang{position:fixed;top:0;left:0;width:100%;background:rgba(90,15,15,.9);padding:12px 25px;display:flex;justify-content:space-between;align-items:center;border-bottom:3px solid #d4af37;z-index:100;display:none}
-        .dau-trang.hien{display:flex}
-        .ten-game{font-size:20px;font-weight:bold;color:#ffd700}
-        .danh-sach{display:flex;gap:12px}
-        .nguoi{background:rgba(0,0,0,.4);padding:6px 14px;border-radius:20px;border:1px solid #d4af37;font-size:14px}
-        .dau-xanh{display:inline-block;width:9px;height:9px;background:#0f0;border-radius:50%;margin-right:7px}
-        
-        /* Màn hình chơi */
-        .khu-vuc{margin-top:100px;padding:30px;text-align:center;display:none}
-        .khu-vuc.hien{display:block}
-        .chao{font-size:28px;color:#ffd700;margin-bottom:10px}
-        .ghi-chu{color:#f5deb3;margin-bottom:35px;font-size:17px}
-        .khung-dk{background:rgba(0,0,0,.5);padding:25px;border-radius:10px;max-width:480px;margin:0 auto;text-align:left;line-height:2.2;border:1px solid #d4af37}
-        .khung-dk h4{color:#ffd700;text-align:center;margin-bottom:12px;font-size:19px}
-        .luu-y{margin-top:25px;padding:15px;background:rgba(0,80,0,.2);border-radius:8px;border:1px solid #0f0;color:#9f9;text-align:center}
-        
-        .thong-bao{position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.75);padding:12px 25px;border-radius:8px;border:1px solid #d4af37;color:#ffd700;z-index:200;opacity:0;transition:opacity .3s}
-        .thong-bao.hien{opacity:1}
+
+        /* ===== KHUNG GAME — ẨN ĐẾN KHI NHẬP TÊN XONG ===== */
+        .khung-game{position:fixed;inset:0;width:100%;height:100%;display:none;background:#1a0f05}
+        .khung-game.hien{display:block}
+
+        /* Tên góc trên phải */
+        .ten-nguoi{position:fixed;top:15px;right:25px;background:rgba(0,0,0,.5);padding:8px 16px;border-radius:20px;border:1px solid #d4af37;color:#ffd700;font-weight:bold;z-index:100}
     </style>
 </head>
 <body>
 
-    <!-- Màn hình nhập tên — LUÔN HIỆN ĐẦU TIÊN -->
+    <!-- ===== MÀN HÌNH NHẬP TÊN ===== -->
     <div class="man-hinh-nhap" id="manHinhNhap">
         <h1 class="tieu-de">🏛️ KINH ĐÔ HUẾ ONLINE</h1>
         <p class="mo-ta">Mở link là gặp nhau — không phòng, không mã!</p>
-        <input type="text" class="nhap-ten" id="tenCuaBan" placeholder="✍️ Gõ tên của bạn" maxlength="12" autocomplete="off" value="">
+        <input type="text" class="nhap-ten" id="tenCuaBan" placeholder="✍️ Gõ tên của bạn" maxlength="12" autocomplete="off">
         <br>
         <button class="btn-vao" onclick="vaoChoi()">🎮 VÀO CHƠI NGAY</button>
     </div>
 
-    <div class="dau-trang" id="dauTrang">
-        <div class="ten-game">KINH ĐÔ HUẾ</div>
-        <div class="danh-sach" id="dsNguoiChoi"></div>
+    <!-- ===== KHUNG GAME — VÀO THẲNG SAU NHẬP TÊN ===== -->
+    <div class="khung-game" id="khungGame">
+        <div class="ten-nguoi" id="hienTen"></div>
+        <!-- NỘI DUNG GAME SẼ ĐƯỢC ĐẶT Ở ĐÂY — BẠN THÊM HÌNH ẢNH/KHÔNG GIAN 3D VÀO ĐÂY -->
     </div>
-
-    <div class="khu-vuc" id="manHinhChinh">
-        <h2 class="chao" id="dongChao"></h2>
-        <p class="ghi-chu">Bạn đang ở Ngọ Môn — ai vào link này đều gặp nhau tại đây ✅</p>
-        
-        <div class="khung-dk">
-            <h4>🎮 ĐIỀU KHIỂN</h4>
-            <p>↑ ↓ ← → / WASD : Di chuyển</p>
-            <p>SHIFT : Chạy nhanh</p>
-            <p>SPACE : Nhảy / Lên xuống ngựa</p>
-            <p>E : Thắp hương · Đánh chuông · Tương tác</p>
-            <p>Chuột : Xoay camera</p>
-        </div>
-        
-        <div class="luu-y">
-            🔗 Gửi link này cho bạn bè → họ gõ tên → Vào chơi → gặp nhau cùng chỗ!
-        </div>
-    </div>
-
-    <div class="thong-bao" id="tbNhan"></div>
 
 <script>
-// XÓA SẠCH DỮ LIỆU CŨ MỖI LẦN TẢI TRANG
+// XÓA TẤT CẢ DỮ LIỆU CŨ MỖI LẦN MỞ TRANG
 localStorage.clear();
 sessionStorage.clear();
-
-let tenNguoi = '';
-let dsOnline = [];
-
-function hienTB(text){
-    const t = document.getElementById('tbNhan');
-    t.innerText = text;
-    t.classList.add('hien');
-    setTimeout(()=>t.classList.remove('hien'), 3000);
-}
-
-function capNhatDS(){
-    document.getElementById('dsNguoiChoi').innerHTML = dsOnline.map(n=>
-        `<span class="nguoi"><span class="dau-xanh"></span>${n}</span>`
-    ).join('');
-}
-
-// BUỘC HIỆN MÀN HÌNH NHẬP TÊN KHI TRANG TẢI XONG
-document.addEventListener('DOMContentLoaded', function(){
-    document.getElementById('manHinhNhap').classList.remove('an');
-    document.getElementById('tenCuaBan').value = '';
-});
 
 function vaoChoi(){
     const ten = document.getElementById('tenCuaBan').value.trim();
     if(!ten){
-        hienTB('❌ Gõ tên trước nhé!');
+        alert('❌ Gõ tên trước nhé!');
         return;
     }
-    
-    tenNguoi = ten;
-    dsOnline.push(tenNguoi);
-    
+
+    // Ẩn màn hình nhập tên → hiện thẳng game
     document.getElementById('manHinhNhap').classList.add('an');
-    setTimeout(()=>{
-        document.getElementById('dauTrang').classList.add('hien');
-        document.getElementById('manHinhChinh').classList.add('hien');
-        document.getElementById('dongChao').innerHTML = `👋 Chào mừng <span style="color:#ffd700">${tenNguoi}</span>! Đã vào Kinh Đô Huế`;
-        capNhatDS();
-        hienTB('✅ Đã vào! Gửi link cho bạn bè cùng chơi');
-    }, 300);
+    document.getElementById('hienTen').innerText = ten;
+    document.getElementById('khungGame').classList.add('hien');
 }
 </script>
+
 </body>
 </html>
