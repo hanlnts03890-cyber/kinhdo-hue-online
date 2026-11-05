@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kinh Đô Huế Online</title>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif}
+        body{background:linear-gradient(rgba(20,10,5,.92),rgba(50,25,10,.95));min-height:100vh;color:#fff}
+        
+        /* Màn hình vào */
+        .start-screen{position:fixed;top:0;left:0;width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(rgba(40,10,10,.97),rgba(20,5,5,.95));z-index:500;transition:opacity .5s}
+        .start-title{font-size:42px;color:#ffd700;margin-bottom:15px;text-shadow:0 0 20px rgba(255,215,0,.5)}
+        .start-desc{color:#f5deb3;font-size:18px;margin-bottom:40px}
+        .input-nick{padding:15px 20px;font-size:18px;width:280px;text-align:center;border:2px solid #d4af37;border-radius:8px;background:rgba(0,0,0,.5);color:#fff;margin-bottom:20px}
+        .btn-enter{padding:18px 50px;font-size:22px;font-weight:bold;border-radius:10px;background:linear-gradient(135deg,#b8860b,#ffd700);color:#2b0000;cursor:pointer;border:2px solid #ffd700;transition:transform .3s}
+        .btn-enter:hover{transform:scale(1.05)}
+        
+        /* Thông báo */
+        .status-msg{position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.75);padding:12px 25px;border-radius:8px;border:1px solid #d4af37;color:#ffd700;z-index:200;opacity:0;transition:opacity .5s;pointer-events:none}
+        .status-msg.show{opacity:1}
+        
+        /* Header game */
+        .game-header{position:fixed;top:0;left:0;width:100%;background:rgba(90,15,15,.9);padding:12px 25px;display:flex;justify-content:space-between;align-items:center;border-bottom:3px solid #d4af37;z-index:100;display:none}
+        .game-title{font-size:20px;font-weight:bold;color:#ffd700}
+        .players-list{display:flex;gap:12px}
+        .player-tag{background:rgba(0,0,0,.4);padding:5px 12px;border-radius:20px;border:1px solid #d4af37;font-size:14px}
+        .online-dot{display:inline-block;width:8px;height:8px;background:#0f0;border-radius:50%;margin-right:6px}
+        
+        /* Khu vực chính */
+        .game-area{margin-top:90px;padding:30px;text-align:center;display:none}
+        .welcome{font-size:26px;color:#ffd700;margin-bottom:10px}
+        .guide{color:#f5deb3;margin-bottom:30px;font-size:16px}
+        .controls-box{background:rgba(0,0,0,.5);padding:25px;border-radius:10px;max-width:450px;margin:0 auto;text-align:left;line-height:2;border:1px solid #d4af37}
+        .controls-box h4{color:#ffd700;text-align:center;margin-bottom:10px}
+        .room-share{margin-top:25px;padding:15px;background:rgba(0,0,0,.4);border-radius:8px;border:1px solid #d4af37}
+        .room-code{font-size:24px;color:#ffd700;font-weight:bold;letter-spacing:2px;margin:8px 0}
+        .copy-btn,.join-btn{padding:8px 15px;margin-left:8px;border-radius:5px;cursor:pointer;font-weight:bold;border:none}
+        .copy-btn{background:#b8860b;color:#fff}
+        .join-btn{background:#8b0000;color:#fff}
+        .join-input{padding:8px;width:140px;background:rgba(0,0,0,.4);border:1px solid #d4af37;color:#fff;border-radius:5px}
+    </style>
+</head>
+<body>
+
+    <!-- Màn hình vào -->
+    <div class="start-screen" id="startScreen">
+        <h1 class="start-title">🏛️ KINH ĐÔ HUẾ ONLINE</h1>
+        <p class="start-desc">Vào thẳng khám phá — gặp bạn bè mọi lúc mọi nơi</p>
+        <input type="text" class="input-nick" id="nickInput" placeholder="Nhập tên của bạn" maxlength="12">
+        <button class="btn-enter" onclick="vaoGame()">🚪 VÀO CHƠI NGAY</button>
+    </div>
+
+    <!-- Header game -->
+    <div class="game-header" id="gameHeader">
+        <div class="game-title">KINH ĐÔ HUẾ</div>
+        <div class="players-list" id="playersList"></div>
+    </div>
+
+    <!-- Nội dung game -->
+    <div class="game-area" id="gameArea">
+        <h2 class="welcome" id="welcomeMsg"></h2>
+        <p class="guide">Bạn đang ở Ngọ Môn — tự do di chuyển, gặp gỡ bạn bè khắp kinh thành</p>
+        
+        <div class="room-share">
+            <p>📤 Mời bạn bè vào cùng chơi — gửi link hoặc mã phòng:</p>
+            <div class="room-code" id="roomCodeDisplay"></div>
+            <button class="copy-btn" onclick="saoChepMa()">📋 Sao chép mã</button>
+            <br><br>
+            <input type="text" class="join-input" id="joinInput" placeholder="Nhập mã bạn bè gửi">
+            <button class="join-btn" onclick="vaoPhong()">Vào phòng</button>
+        </div>
+
+        <div class="controls-box" style="margin-top:30px">
+            <h4>🎮 ĐIỀU KHIỂN</h4>
+            <p>↑↓←→ / WASD : Di chuyển</p>
+            <p>SHIFT : Chạy nhanh</p>
+            <p>SPACE : Nhảy / Lên xuống ngựa</p>
+            <p>E : Thắp hương · Đánh chuông · Tương tác</p>
+            <p>Chuột : Xoay camera</p>
+        </div>
+    </div>
+
+    <!-- Thông báo -->
+    <div class="status-msg" id="statusMsg"></div>
+
+<script>
+let tenNguoiChoi = '';
+let maPhong = '';
+let dsNguoi = [];
+
+function taoMaPhong(){return 'HDH-' + Math.floor(Math.random()*9000+1000)}
+function thongBao(text){const m=document.getElementById('statusMsg');m.innerHTML=text;m.classList.add('show');setTimeout(()=>m.classList.remove('show'),3000)}
+function saoChepMa(){navigator.clipboard.writeText(maPhong).then(()=>thongBao('✅ Đã sao chép! Gửi bạn bè đi nhé'))}
+function capNhatDanhSach(){document.getElementById('playersList').innerHTML=dsNguoi.map(p=>`<span class="player-tag"><span class="online-dot"></span>${p}</span>`).join('')}
+
+function vaoPhong(){
+    const code=document.getElementById('joinInput').value.trim();
+    if(!code){thongBao('❌ Nhập mã phòng trước!');return}
+    if(!dsNguoi.includes(code)){
+        dsNguoi.push('Bạn bè '+(dsNguoi.length+1));
+        capNhatDanhSach();
+        thongBao('✅ Đã vào! Đang gặp bạn bè...');
+    }else thongBao('Bạn đã trong phòng này rồi!');
+    document.getElementById('joinInput').value='';
+}
+
+function vaoGame(){
+    const nick=document.getElementById('nickInput').value.trim();
+    if(!nick){thongBao('❌ Nhập tên trước!');return}
+    tenNguoiChoi=nick;
+    maPhong=taoMaPhong();
+    dsNguoi=[tenNguoiChoi];
+    
+    // Chuyển vào game
+    document.getElementById('startScreen').style.opacity='0';
+    setTimeout(()=>{
+        document.getElementById('startScreen').style.display='none';
+        document.getElementById('gameHeader').style.display='flex';
+        document.getElementById('gameArea').style.display='block';
+        document.getElementById('welcomeMsg').innerHTML=`👋 Chào mừng <span style="color:#ffd700">${tenNguoiChoi}</span>!`;
+        document.getElementById('roomCodeDisplay').innerText=maPhong;
+        capNhatDanhSach();
+        thongBao('✅ Đã vào Kinh Đô Huế! Gửi mã cho bạn bè cùng chơi');
+    },400);
+}
+</script>
+</body>
+</html>
