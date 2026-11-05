@@ -3,6 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
     <title>Kinh Đô Huế Online</title>
     <style>
         *{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif}
@@ -10,7 +13,7 @@
         
         /* Màn hình nhập tên — LUÔN HIỆN ĐẦU TIÊN */
         .man-hinh-nhap{position:fixed;top:0;left:0;width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(rgba(40,10,10,.97),rgba(20,5,5,.95));z-index:999}
-        .man-hinh-nhap.an{display:none}
+        .man-hinh-nhap.an{display:none !important}
         .tieu-de{font-size:42px;color:#ffd700;margin-bottom:15px;text-shadow:0 0 20px rgba(255,215,0,.5)}
         .mo-ta{color:#f5deb3;font-size:18px;margin-bottom:40px}
         .nhap-ten{padding:15px 20px;font-size:20px;width:300px;text-align:center;border:2px solid #d4af37;border-radius:8px;background:rgba(0,0,0,.5);color:#fff;margin-bottom:25px}
@@ -40,11 +43,11 @@
 </head>
 <body>
 
-    <!-- LUÔN HIỆN ĐẦU TIÊN — KHÔNG BỎ QUA -->
+    <!-- LUÔN HIỆN ĐẦU TIÊN — KHÔNG BỎ QUA DƯỚI BẤT KỲ HOÀN CẢNH NÀO -->
     <div class="man-hinh-nhap" id="manHinhNhap">
         <h1 class="tieu-de">🏛️ KINH ĐÔ HUẾ ONLINE</h1>
         <p class="mo-ta">Mở link là gặp nhau — không phòng, không mã!</p>
-        <input type="text" class="nhap-ten" id="tenCuaBan" placeholder="✍️ Gõ tên của bạn" maxlength="12" autocomplete="off">
+        <input type="text" class="nhap-ten" id="tenCuaBan" placeholder="✍️ Gõ tên của bạn" maxlength="12" autocomplete="off" value="">
         <br>
         <button class="btn-vao" onclick="vaoChoi()">🎮 VÀO CHƠI NGAY</button>
     </div>
@@ -75,11 +78,12 @@
     <div class="thong-bao" id="tbNhan"></div>
 
 <script>
+// XÓA TẤT CẢ DỮ LIỆU LƯU — KHÔNG ĐỂ NHẢY QUA
+localStorage.clear();
+sessionStorage.clear();
+
 let tenNguoi = '';
 let dsOnline = [];
-
-// XÓA DỮ LIỆU CŨ MỖI LẦN TẢI TRANG — KHÔNG NHẢY QUA MÀN HÌNH NHẬP TÊN
-localStorage.removeItem('danhSachOnline');
 
 function hienTB(text){
     const t = document.getElementById('tbNhan');
@@ -93,6 +97,12 @@ function capNhatDS(){
         `<span class="nguoi"><span class="dau-xanh"></span>${n}</span>`
     ).join('');
 }
+
+// ĐẢM BẢO MÀN HÌNH NHẬP TÊN LUÔN HIỆN KHI TẢI XONG
+window.onload = function(){
+    document.getElementById('manHinhNhap').classList.remove('an');
+    document.getElementById('tenCuaBan').value = ''; // XÓA TÊN CŨ TRƯỚC KHI HIỆN
+};
 
 function vaoChoi(){
     const ten = document.getElementById('tenCuaBan').value.trim();
