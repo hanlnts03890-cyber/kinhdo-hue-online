@@ -4,27 +4,33 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-<meta http-equiv="Pragma" content="no-cache">
-<meta http-equiv="Expires" content="0">
 <title>Kinh Đô Huế Online</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 html,body{width:100%;height:100%;overflow:hidden}
 body{background:#2b1508;color:#fff;font-family:Arial,sans-serif}
 
-/* === MÀN HÌNH NHẬP TÊN - BẮT BUỘC HIỆN ĐẦU TIÊN === */
-#manHinhNhap{position:fixed;inset:0;background:linear-gradient(180deg,#3a1010,#1a0808);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:999999}
+/* === Ô NHẬP TÊN — BẮT BUỘC HIỆN LUÔN === */
+#manHinhNhap{
+  position:fixed;inset:0;
+  background:linear-gradient(180deg,#3a1010,#1a0808);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  z-index:999999;
+}
 #manHinhNhap.an{display:none !important}
 
-h1{font-size:48px;color:#ffd700;margin-bottom:15px;text-shadow:0 0 20px rgba(255,215,0,.5)}
+h1{font-size:48px;color:#ffd700;margin-bottom:15px}
 .mota{font-size:20px;color:#f5deb3;margin-bottom:40px}
-.nhap{padding:18px 25px;font-size:22px;width:350px;text-align:center;border:3px solid #d4af37;border-radius:10px;background:rgba(0,0,0,.6);color:#fff;margin-bottom:30px;outline:none}
-.nut{padding:20px 70px;font-size:24px;font-weight:bold;background:linear-gradient(135deg,#b8860b,#ffd700);color:#2b0000;border:none;border-radius:12px;cursor:pointer;border:3px solid #ffd700}
+.nhap{padding:18px 25px;font-size:22px;width:350px;text-align:center;
+  border:3px solid #d4af37;border-radius:10px;background:rgba(0,0,0,.6);color:#fff;margin-bottom:30px}
+.nut{padding:20px 70px;font-size:24px;font-weight:bold;
+  background:linear-gradient(135deg,#b8860b,#ffd700);color:#2b0000;border:none;border-radius:12px;cursor:pointer;border:3px solid #ffd700}
 
-/* === KHUNG GAME - MẶC ĐỊNH ẨN === */
+/* === KHUNG GAME — MẶC ĐỊNH ẨN === */
 #game{position:fixed;inset:0;display:none;background:#1a0f05}
 #game.hien{display:block}
-.ten{position:fixed;top:15px;right:25px;background:rgba(0,0,0,.5);padding:8px 16px;border-radius:20px;border:2px solid #d4af37;color:#ffd700;font-weight:bold}
+.ten{position:fixed;top:15px;right:25px;background:rgba(0,0,0,.5);
+  padding:10px 20px;border-radius:25px;border:2px solid #d4af37;color:#ffd700;font-weight:bold}
 </style>
 </head>
 <body>
@@ -40,24 +46,33 @@ h1{font-size:48px;color:#ffd700;margin-bottom:15px;text-shadow:0 0 20px rgba(255
 <!-- === KHUNG GAME === -->
 <div id="game">
 <div class="ten" id="hienTen"></div>
-<!-- DÁN MÃ GAME 3D CỦA BẠN Ở ĐÂY -->
+<!-- DÁN MÃ GAME 3D CỦA BẠN Ở ĐÂY → dưới dòng này -->
 
 </div>
 
 <script>
+// XÓA DỮ LIỆU CŨ NGAY
 localStorage.clear();
 sessionStorage.clear();
 
+// ĐẢM BẢO TRẠNG THÁI ĐÚNG TỪ ĐẦU
+document.getElementById('manHinhNhap').style.display = 'flex';
+document.getElementById('game').style.display = 'none';
+document.getElementById('ten').value = '';
+
 function vao(){
-  const t = document.getElementById('ten').value.trim();
+  var t = document.getElementById('ten').value.trim();
   if(!t){ alert('⚠️ Gõ tên trước!'); return; }
+
+  // Ẩn ô nhập tên
   document.getElementById('manHinhNhap').classList.add('an');
+  // Hiện game
   document.getElementById('hienTen').innerText = t;
   document.getElementById('game').classList.add('hien');
 }
 
-document.getElementById('btnVao').addEventListener('click', vao);
-document.getElementById('ten').addEventListener('keypress', e => e.key==='Enter' && vao());
+document.getElementById('btnVao').onclick = vao;
+document.getElementById('ten').addEventListener('keypress',e=>e.key==='Enter'&&vao());
 </script>
 
 </body>
