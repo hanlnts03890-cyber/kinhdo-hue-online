@@ -3,19 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kinh Đô Huế Online — Vào thẳng gặp nhau</title>
+    <title>Kinh Đô Huế Online</title>
     <style>
         *{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif}
         body{background:linear-gradient(rgba(20,10,5,.92),rgba(50,25,10,.95));min-height:100vh;color:#fff}
         
-        .man-hinh-nhap{position:fixed;top:0;left:0;width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(rgba(40,10,10,.97),rgba(20,5,5,.95));z-index:999;transition:opacity .5s}
-        .man-hinh-nhap.an{opacity:0;pointer-events:none}
+        /* Màn hình nhập tên — LUÔN HIỆN ĐẦU TIÊN */
+        .man-hinh-nhap{position:fixed;top:0;left:0;width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(rgba(40,10,10,.97),rgba(20,5,5,.95));z-index:999}
+        .man-hinh-nhap.an{display:none}
         .tieu-de{font-size:42px;color:#ffd700;margin-bottom:15px;text-shadow:0 0 20px rgba(255,215,0,.5)}
         .mo-ta{color:#f5deb3;font-size:18px;margin-bottom:40px}
         .nhap-ten{padding:15px 20px;font-size:20px;width:300px;text-align:center;border:2px solid #d4af37;border-radius:8px;background:rgba(0,0,0,.5);color:#fff;margin-bottom:25px}
         .btn-vao{padding:18px 60px;font-size:22px;font-weight:bold;border:none;border-radius:10px;background:linear-gradient(135deg,#b8860b,#ffd700);color:#2b0000;cursor:pointer;border:2px solid #ffd700;transition:transform .2s}
         .btn-vao:hover{transform:scale(1.05)}
         
+        /* Header */
         .dau-trang{position:fixed;top:0;left:0;width:100%;background:rgba(90,15,15,.9);padding:12px 25px;display:flex;justify-content:space-between;align-items:center;border-bottom:3px solid #d4af37;z-index:100;display:none}
         .dau-trang.hien{display:flex}
         .ten-game{font-size:20px;font-weight:bold;color:#ffd700}
@@ -23,6 +25,7 @@
         .nguoi{background:rgba(0,0,0,.4);padding:6px 14px;border-radius:20px;border:1px solid #d4af37;font-size:14px}
         .dau-xanh{display:inline-block;width:9px;height:9px;background:#0f0;border-radius:50%;margin-right:7px}
         
+        /* Màn hình chơi */
         .khu-vuc{margin-top:100px;padding:30px;text-align:center;display:none}
         .khu-vuc.hien{display:block}
         .chao{font-size:28px;color:#ffd700;margin-bottom:10px}
@@ -37,10 +40,11 @@
 </head>
 <body>
 
+    <!-- LUÔN HIỆN ĐẦU TIÊN — KHÔNG BỎ QUA -->
     <div class="man-hinh-nhap" id="manHinhNhap">
         <h1 class="tieu-de">🏛️ KINH ĐÔ HUẾ ONLINE</h1>
         <p class="mo-ta">Mở link là gặp nhau — không phòng, không mã!</p>
-        <input type="text" class="nhap-ten" id="tenCuaBan" placeholder="✍️ Gõ tên của bạn" maxlength="12">
+        <input type="text" class="nhap-ten" id="tenCuaBan" placeholder="✍️ Gõ tên của bạn" maxlength="12" autocomplete="off">
         <br>
         <button class="btn-vao" onclick="vaoChoi()">🎮 VÀO CHƠI NGAY</button>
     </div>
@@ -74,19 +78,16 @@
 let tenNguoi = '';
 let dsOnline = [];
 
-function layDanhSach(){
-    let duLieu = localStorage.getItem('danhSachOnline');
-    return duLieu ? JSON.parse(duLieu) : [];
-}
-function luuDanhSach(danhSach){
-    localStorage.setItem('danhSachOnline', JSON.stringify(danhSach));
-}
+// XÓA DỮ LIỆU CŨ MỖI LẦN TẢI TRANG — KHÔNG NHẢY QUA MÀN HÌNH NHẬP TÊN
+localStorage.removeItem('danhSachOnline');
+
 function hienTB(text){
     const t = document.getElementById('tbNhan');
     t.innerText = text;
     t.classList.add('hien');
     setTimeout(()=>t.classList.remove('hien'), 3000);
 }
+
 function capNhatDS(){
     document.getElementById('dsNguoiChoi').innerHTML = dsOnline.map(n=>
         `<span class="nguoi"><span class="dau-xanh"></span>${n}</span>`
@@ -101,22 +102,17 @@ function vaoChoi(){
     }
     
     tenNguoi = ten;
-    dsOnline = layDanhSach();
+    dsOnline.push(tenNguoi);
     
-    if(!dsOnline.includes(tenNguoi)){
-        dsOnline.push(tenNguoi);
-        luuDanhSach(dsOnline);
-    }
-    
+    // Ẩn màn hình nhập → hiện game
     document.getElementById('manHinhNhap').classList.add('an');
     setTimeout(()=>{
-        document.getElementById('manHinhNhap').style.display='none';
         document.getElementById('dauTrang').classList.add('hien');
         document.getElementById('manHinhChinh').classList.add('hien');
         document.getElementById('dongChao').innerHTML = `👋 Chào mừng <span style="color:#ffd700">${tenNguoi}</span>! Đã vào Kinh Đô Huế`;
         capNhatDS();
         hienTB('✅ Đã vào! Gửi link cho bạn bè cùng chơi');
-    }, 400);
+    }, 300);
 }
 </script>
 </body>
